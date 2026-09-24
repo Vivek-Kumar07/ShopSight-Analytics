@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>ShopKart - E-commerce Sales Analytics</title>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Papa Parse -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- AutoTable -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar" id="sidebar">
+      <div class="logo">
+        <div class="logo-icon">S</div>
+        <div>
+          <h2>ShopKart</h2>
+          <span>Analytics</span>
+        </div>
+      </div>
+
+      <nav>
+        <a href="#dashboard" class="active"> <span>📊</span> Dashboard </a>
+
+        <a href="#analytics"> <span>📈</span> Analytics </a>
+
+        <a href="#products"> <span>🛍️</span> Products </a>
+
+        <a href="#cities"> <span>🌍</span> Cities </a>
+
+        <a href="#orders"> <span>📋</span> Orders </a>
+
+        <a href="#reports"> <span>📄</span> Reports </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <p>Data Analytics Dashboard</p>
+      </div>
+    </aside>
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main-content">
+      <!-- NAVBAR -->
+
+      <header class="navbar">
+        <button class="menu-btn" id="menuBtn">☰</button>
+
+        <div>
+          <h1>ShopKart Dashboard</h1>
+          <p>E-commerce Sales Analytics</p>
+        </div>
+
+        <button class="theme-btn" id="themeBtn">🌙</button>
+      </header>
+
+      <!-- ================= DASHBOARD ================= -->
+
+      <section id="dashboard">
+        <div class="page-heading">
+          <div>
+            <h2>Sales Overview</h2>
+            <p>Analyze your e-commerce sales performance</p>
+          </div>
+        </div>
+
+        <!-- ================= UPLOAD CSV ================= -->
+
+        <div class="upload-card">
+          <div class="upload-content">
+            <div class="upload-icon">📂</div>
+
+            <div class="upload-text">
+              <h3>Upload Your CSV Dataset</h3>
+
+              <p>
+                Select a CSV file from your device to analyze it automatically.
+              </p>
+
+              <div class="upload-controls">
+                <label for="csvFile" class="upload-btn">
+                  Choose CSV File
+                </label>
+
+                <input type="file" id="csvFile" accept=".csv" hidden />
+
+                <span id="fileName"> No file selected </span>
+              </div>
+            </div>
+          </div>
+
+          <div id="uploadStatus" class="upload-status">
+            Please upload a CSV file to start analysis.
+          </div>
+        </div>
+
+        <!-- ================= FILTERS ================= -->
+
+        <div class="filter-card">
+          <div class="filter-title">
+            <h3>Filters</h3>
+
+            <button id="resetFilters" class="reset-btn">Reset Filters</button>
+          </div>
+
+          <div class="filters">
+            <div class="filter-group">
+              <label for="categoryFilter"> Category </label>
+
+              <select id="categoryFilter">
+                <option value="all">All Categories</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label for="cityFilter"> City </label>
+
+              <select id="cityFilter">
+                <option value="all">All Cities</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label for="monthFilter"> Month </label>
+
+              <select id="monthFilter">
+                <option value="all">All Months</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= KPI CARDS ================= -->
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon revenue-icon">₹</div>
+
+            <div>
+              <p>Total Revenue</p>
+              <h2 id="totalRevenue">₹0</h2>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon order-icon">🛒</div>
+
+            <div>
+              <p>Total Orders</p>
+              <h2 id="totalOrders">0</h2>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon quantity-icon">📦</div>
+
+            <div>
+              <p>Total Quantity</p>
+              <h2 id="totalQuantity">0</h2>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon average-icon">💰</div>
+
+            <div>
+              <p>Average Order Value</p>
+              <h2 id="averageOrderValue">₹0</h2>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= CHARTS ================= -->
+
+        <section id="analytics">
+          <div class="section-title">
+            <h2>Sales Analytics</h2>
+          </div>
+
+          <div class="chart-grid">
+            <div class="chart-card large-chart">
+              <div class="chart-header">
+                <div>
+                  <h3>Monthly Revenue Trend</h3>
+                  <p>Revenue performance over time</p>
+                </div>
+              </div>
+
+              <div class="chart-container">
+                <canvas id="revenueChart"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-header">
+                <div>
+                  <h3>Revenue by Category</h3>
+                  <p>Category contribution</p>
+                </div>
+              </div>
+
+              <div class="chart-container">
+                <canvas id="categoryChart"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-header">
+                <div>
+                  <h3>Revenue by City</h3>
+                  <p>City-wise performance</p>
+                </div>
+              </div>
+
+              <div class="chart-container">
+                <canvas id="cityChart"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card large-chart" id="products">
+              <div class="chart-header">
+                <div>
+                  <h3>Top 10 Products</h3>
+                  <p>Products generating the highest revenue</p>
+                </div>
+              </div>
+
+              <div class="chart-container">
+                <canvas id="productChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= BUSINESS INSIGHTS ================= -->
+
+        <section class="insights-section">
+          <div class="section-title">
+            <h2>Business Insights</h2>
+          </div>
+
+          <div class="insight-card">
+            <div class="insight-icon">💡</div>
+
+            <div>
+              <h3>Automatic Analysis</h3>
+
+              <p id="summaryText">
+                Upload a CSV file to generate business insights.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= CITY SECTION ================= -->
+
+        <section id="cities">
+          <div class="section-title">
+            <h2>City Performance</h2>
+          </div>
+
+          <div class="info-card">
+            <p>
+              The city chart above shows revenue generated from each location.
+              Use the city filter to analyze individual markets.
+            </p>
+          </div>
+        </section>
+
+        <!-- ================= ORDERS ================= -->
+
+        <section id="orders">
+          <div class="section-title">
+            <div>
+              <h2>Recent Orders</h2>
+              <p>Latest records from the selected dataset</p>
+            </div>
+          </div>
+
+          <div class="table-card">
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr id="orderTableHead">
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>City</th>
+                    <th>Category</th>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Revenue</th>
+                  </tr>
+                </thead>
+
+                <tbody id="orderTableBody">
+                  <tr>
+                    <td colspan="8" class="empty-table">
+                      Upload a CSV file to display orders.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="table-footer">Showing first 20 records</div>
+          </div>
+        </section>
+
+        <!-- ================= REPORTS ================= -->
+
+        <section id="reports">
+          <div class="section-title">
+            <h2>Reports & Export</h2>
+          </div>
+
+          <div class="report-grid">
+            <div class="report-card">
+              <div class="report-icon">📊</div>
+
+              <div>
+                <h3>Export CSV</h3>
+
+                <p>Download the currently filtered data.</p>
+
+                <button id="exportCSV" class="primary-btn">Download CSV</button>
+              </div>
+            </div>
+
+            <div class="report-card">
+              <div class="report-icon">📄</div>
+
+              <div>
+                <h3>Generate PDF Report</h3>
+
+                <p>
+                  Generate a professional PDF containing KPIs, charts, insights
+                  and complete data.
+                </p>
+
+                <button id="exportPDF" class="primary-btn">Generate PDF</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <!-- JavaScript -->
+
+    <script src="script.js"></script>
+  </body>
+</html>
