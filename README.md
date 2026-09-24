@@ -1,4 +1,4 @@
-# ShopKart
+# ShopSight Analytics
 
 # 🛒 ShopSight Analytics – E-commerce Sales Analytics Dashboard
 
